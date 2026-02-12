@@ -1,4 +1,4 @@
-# 🌐S3 Static Website Hosting (Cloud L1)
+# 🌐S3 Static Website Hosting
 
 ## 📌 Project Overview
 
