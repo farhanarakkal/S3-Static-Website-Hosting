@@ -1,17 +1,41 @@
-# 🌐S3 Static Website Hosting
+# 🌐 CloudL1 -- S3 Static Website Hosting
 
-## 📌 Project Overview
+A static website hosted using Amazon S3.\
+This project focuses on understanding object storage, public access
+configuration, and how static hosting works in a fully serverless
+architecture.
 
-This project demonstrates how to host a static website using **Amazon
-S3**.
+The goal was not just to host a website --- but to understand what
+happens behind the scenes.
 
-The objective was to: - Create an S3 bucket - Upload website files
-(HTML, CSS, JS) - Enable Static Website Hosting - Configure public
-access using Bucket Policy - Troubleshoot common hosting errors
+------------------------------------------------------------------------
 
-This project builds foundational knowledge of: - AWS S3 - Object
-Storage - Bucket Policies - Public Access Configuration - Static Hosting
-Architecture
+## 📦 Technologies
+
+-   Amazon S3
+-   AWS Console
+-   Bucket Policies
+-   IAM Concepts
+-   HTML
+-   CSS
+-   JavaScript
+
+------------------------------------------------------------------------
+
+## 🦄 Features
+
+Here's what this project demonstrates:
+
+-   **Static Website Hosting**: Hosting HTML, CSS, and JS files directly
+    from an S3 bucket.
+-   **Public Access Configuration**: Managing Block Public Access
+    settings properly.
+-   **Bucket Policy Implementation**: Writing JSON policy to allow
+    public read access.
+-   **Serverless Architecture**: No EC2. No backend. Only object
+    storage.
+-   **Error Handling & Troubleshooting**: Solving real-world AWS errors
+    like AccessDenied and NoSuchKey.
 
 ------------------------------------------------------------------------
 
@@ -21,136 +45,92 @@ User (Browser)\
 ↓\
 S3 Static Website Endpoint\
 ↓\
-S3 Bucket (HTML, CSS, JS files)
+S3 Bucket (HTML, CSS, JS)
 
-This is a fully serverless architecture. No EC2. No backend. Only object
-storage.
+This is a fully serverless architecture.
 
+There is: - No compute layer - No database - No backend server
 
-
-------------------------------------------------------------------------
-
-## ⚙️ Configuration Details
-
-### 🪣 Bucket Configuration
-
--   **Bucket Name:** cloud-l1-static-site-`<unique-name>`{=html}
--   **Region:** Asia Pacific (Mumbai) -- ap-south-1
--   **Block Public Access:** Disabled (All 4 unchecked)
--   **Static Website Hosting:** Enabled
+Only object storage serving static content.
 
 ------------------------------------------------------------------------
 
-## 🚀 Implementation Steps
+## 🚀 What You Can Do
 
-### Step 1 --- Create S3 Bucket
+After completing this setup, you can:
 
-1.  Go to AWS Console → S3\
-2.  Click Create bucket\
-3.  Enter unique bucket name\
-4.  Select region: ap-south-1\
-5.  Uncheck Block all public access\
-6.  Acknowledge warning\
-7.  Click Create bucket
-
-![create S3 Bucket](Screenshots/createb.png)
+-   Host any static website (portfolio, landing page, documentation
+    site)
+-   Understand how AWS handles object-level permissions
+-   Configure bucket policies manually
+-   Troubleshoot common beginner mistakes
+-   Deploy static content in minutes
 
 ------------------------------------------------------------------------
 
-### Step 2 --- Upload Website Files
+## 👩🏽‍🍳 The Process
 
-Files must be uploaded at the **root level**.
+I started by creating a uniquely named S3 bucket in the Mumbai region
+(ap-south-1).
 
-Correct structure:
+S3 blocks public access by default, so hosting requires intentional
+configuration.
 
-index.html\
-style.css\
-script.js\
-images/
+Next, I uploaded the website files --- making sure they were placed in
+the root level of the bucket. If files are uploaded inside a folder, S3
+cannot find index.html, which results in a NoSuchKey error.
 
-Incorrect structure:
+After that, I enabled Static Website Hosting from the Properties tab and
+defined: - index.html as the index document - error.html as the error
+document
 
-project-folder/\
-index.html
+AWS then generated a public website endpoint.
 
-If inside a folder → S3 throws `NoSuchKey` error.
+Accessing it initially resulted in Access Denied.
 
-![upload files to S3 Bucket](Screenshots/filesupload.png)
+That's when I understood the difference between: - Block Public Access
+settings - Bucket Policies - Object-level permissions
 
-------------------------------------------------------------------------
+I wrote a bucket policy allowing s3:GetObject for all objects inside the
+bucket.
 
-### Step 3 --- Enable Static Website Hosting
-
-1.  Open bucket\
-2.  Go to Properties\
-3.  Scroll to Static Website Hosting\
-4.  Click Edit\
-5.  Enable hosting\
-6.  Index document: index.html\
-7.  Error document: error.html\
-8.  Save changes
-
-AWS generates a website endpoint URL like:
-
-http://bucket-name.s3-website-ap-south-1.amazonaws.com
-
-![create S3 Bucket](Screenshots/hostlink.png)
-
-------------------------------------------------------------------------
-
-### Step 4 --- Configure Bucket Policy
-
-Go to:
-
-Permissions → Bucket Policy → Edit
-
-Add:
-
-{ "Version": "2012-10-17", "Statement": \[ { "Sid":
-"PublicReadGetObject", "Effect": "Allow", "Principal": "*", "Action":
-"s3:GetObject", "Resource":
-"arn:aws:s3:::cloud-l1-static-site-`<your-name>`{=html}/*" } \] }
-
-Replace with your actual bucket name.
-
-This allows public read access to all objects in the bucket.
-
-![create S3 Bucket](Screenshots/policy.png)
+Once applied correctly, the website became publicly accessible.
 
 ------------------------------------------------------------------------
 
 ## 🛠️ Troubleshooting Faced
 
-### ❌ Error: Access Denied
+### ❌ Access Denied
 
-Cause: - Bucket policy missing - Block Public Access enabled
+Cause: - Block Public Access still enabled\
+- Missing bucket policy
 
-Fix: - Add correct bucket policy - Disable all 4 Block Public Access
-settings
+Fix: - Disable all 4 Block Public Access settings\
+- Add correct public-read bucket policy
 
 ------------------------------------------------------------------------
 
-### ❌ Error: NoSuchKey
+### ❌ NoSuchKey Error
 
-Cause: - index.html inside folder - Wrong filename case - Incorrect
-index document name
+Cause: - index.html inside a folder\
+- Wrong file name (case-sensitive)\
+- Incorrect index document name
 
-Fix: - Move files to bucket root - Ensure exact name: index.html - S3 is
-case-sensitive
+Fix: - Move files to bucket root\
+- Ensure exact filename: index.html\
+- Remember: S3 is case-sensitive
 
 ------------------------------------------------------------------------
 
 ### ❌ CSS Not Loading
 
-Cause: - Incorrect file path in HTML
+Cause: - Incorrect relative file path
 
-Fix: Check correct path usage:
-
-`<link rel="stylesheet" href="style.css">`{=html}
+Fix: `<link rel="stylesheet" href="style.css">`{=html}
 
 ------------------------------------------------------------------------
 
-## 💰 Cost Analysis
+## 💰 Cost Awareness
 
 Under AWS Free Tier:
 
@@ -158,11 +138,9 @@ Under AWS Free Tier:
 -   20,000 GET requests free
 -   2,000 PUT requests free
 
-Estimated cost for small static site: ₹0 -- ₹5 per month
+For a small static site, the cost is usually negligible.
 
-------------------------------------------------------------------------
-
-
+Cloud cost awareness is critical. Always delete unused resources.
 
 ------------------------------------------------------------------------
 
@@ -170,66 +148,86 @@ Estimated cost for small static site: ₹0 -- ₹5 per month
 
 This setup allows public access for learning purposes.
 
-In production: - Use CloudFront - Enable HTTPS - Restrict public bucket
-access - Use Origin Access Control (OAC)
+In production environments, best practice would include:
+
+-   Using CloudFront for CDN
+-   Enabling HTTPS
+-   Restricting direct bucket public access
+-   Using Origin Access Control (OAC)
+
+------------------------------------------------------------------------
+
+## 📚 What I Learned
+
+### 🪣 S3 Deep Understanding
+
+-   Difference between bucket-level and object-level permissions
+-   How public access settings override policies
+-   Why S3 blocks public access by default
+
+### 📜 Bucket Policies
+
+-   Understanding Principal, Action, and Resource
+-   How wildcard (\*) works in ARN paths
+
+### 🧠 Cloud Troubleshooting
+
+-   Diagnosing errors logically
+-   Understanding AWS error messages
+-   Fixing configuration issues systematically
+
+### 💸 Cost Discipline
+
+-   Importance of deleting unused resources
+-   Monitoring storage usage
+-   Thinking about billing early
+
+------------------------------------------------------------------------
+
+## 🧹 Resource Cleanup (IMPORTANT)
+
+### Step 1 --- Empty the Bucket
+
+1.  Open bucket\
+2.  Click Empty\
+3.  Confirm permanent deletion
+
+### Step 2 --- Delete the Bucket
+
+1.  Select bucket\
+2.  Click Delete\
+3.  Confirm bucket name\
+4.  Delete
+
+Always verify that: - The bucket no longer appears - Storage usage
+returns to zero
+
+------------------------------------------------------------------------
+
+## 🎯 How It Can Be Improved
+
+-   Add CloudFront integration
+-   Add custom domain with Route 53
+-   Enable HTTPS using ACM
+-   Implement CI/CD deployment
+-   Add versioning to the bucket
+-   Enable logging and monitoring
 
 ------------------------------------------------------------------------
 
 ## 🏁 Final Result
 
-The static website is successfully hosted and accessible via the S3
+The static website is successfully deployed and accessible via the S3
 Website Endpoint.
 
+This project builds strong foundational cloud knowledge and prepares for
+more advanced AWS architectures.
+
+------------------------------------------------------------------------
+
+## 🏁 Screenshot
+
+![create S3 Bucket](Screenshots/policy.png)
+
 ![create S3 Bucket](Screenshots/sitehost.png)
-
-------------------------------------------------------------------------
-
-# 🧹 Resource Cleanup (IMPORTANT)
-
-To avoid unnecessary AWS charges, always delete resources after
-completing the project.
-
-## 🗑️ Step 1 --- Empty the Bucket
-
-AWS does NOT allow deleting a bucket unless it is empty.
-
-1.  Go to S3 → Open your bucket
-2.  Click "Empty"
-3.  Type "permanently delete"
-4.  Confirm deletion
-
-![create S3 Bucket](Screenshots/dltf.png)
-
-------------------------------------------------------------------------
-
-## 🗑️ Step 2 --- Delete the Bucket
-
-1.  Go back to S3 bucket list
-2.  Select your bucket
-3.  Click "Delete"
-4.  Type the bucket name to confirm
-5.  Click Delete bucket
-
-![create S3 Bucket](Screenshots/dltb.png)
-
-------------------------------------------------------------------------
-
-## Verification
-
-After deletion: - Bucket should no longer appear in S3 list - Storage
-usage should return to zero (if no other buckets exist)
-
-------------------------------------------------------------------------
-
-## 🎓 Learning Outcomes
-
-After completing this project, I understand:
-
--   How S3 stores objects
--   Difference between bucket and object permissions
--   How public access works in AWS
--   How bucket policies control object-level access
--   Common beginner mistakes in static hosting
--   Troubleshooting real-world cloud errors
--   Cloud cost awareness and resource cleanup best practices
 
