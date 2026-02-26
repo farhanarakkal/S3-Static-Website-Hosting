@@ -225,7 +225,7 @@ more advanced AWS architectures.
 
 ------------------------------------------------------------------------
 
-## 🏁 Screenshot
+## 📸 Screenshots
 
 ![create S3 Bucket](Screenshots/sitehost.png)
 
