@@ -227,7 +227,5 @@ more advanced AWS architectures.
 
 ## 🏁 Screenshot
 
-![create S3 Bucket](Screenshots/policy.png)
-
 ![create S3 Bucket](Screenshots/sitehost.png)
 
